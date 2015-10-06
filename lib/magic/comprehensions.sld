@@ -10,7 +10,7 @@
    sum val-max arg-max
    
    ;; from comprehensions/constructors.scm
-   dict mapping)
+   dict mapping alist-function)
   (import (scheme base)
 	  (magic macros))
   (include "./comprehensions/reducers.scm")

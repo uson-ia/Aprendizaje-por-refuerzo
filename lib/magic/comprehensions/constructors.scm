@@ -6,14 +6,15 @@
 ;;;
 ;;; For structure construction
 
+(define (alist-function alist)
+  (lambda (key)
+    (cond ((assoc key alist) => cdr)
+	  (else (error "value not in function's domain" key)))))
+
 (define-syntax dict
   (syntax-rules (=> for in)
     ((dict key-code => val-code for var in lst)
-     (lambda (key)
-       (cond ((assoc key (map (lambda (var)
-				(cons key-code val-code))
-			      lst)) => cdr)
-	     (else (error "value not in function's domain" key)))))))
+     (map (lambda (var) (cons key-code val-code)) lst))))
 
 (define-syntax branch-clauses
   (syntax-rules (else)

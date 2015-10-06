@@ -7,7 +7,7 @@
 ;;; MDP macros
 
 (define-syntax-rule (make-utility x ...)
-  (dict x ...))
+  (alist-function (dict x ...)))
 
 (define-syntax-rule (make-policy x ...)
-  (dict x ...))
+  (alist-function (dict x ...)))

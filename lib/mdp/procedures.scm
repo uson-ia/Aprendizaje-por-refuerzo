@@ -33,6 +33,6 @@
 	     (k (length states)))
     (if (zero? k)
 	utility
-	(iter (make-utility state => (state-action-utility mdp discount (policy state))
+	(iter (make-utility state => (state-action-utility mdp discount utility state (policy state))
 			    for state in states)
 	      (- k 1)))))

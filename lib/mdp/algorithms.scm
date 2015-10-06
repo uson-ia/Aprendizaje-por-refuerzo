@@ -18,7 +18,7 @@
 		 (define utility* (cdr policy*:utility*))
 		 (< (val-max (difference (utility state) (utility* state)) for state in states)
 		    (/ tolerance (length states))))
-	       (lambda (policy:utility)	 ; improve
+	       (lambda (policy:utility)	            ; improve
 		 (define policy (car policy:utility))
 		 (define utility (cdr policy:utility))
 		 (define policy*
@@ -30,6 +30,6 @@
 					    (policy state))
 				for state in states))
 		 (cons policy (evaluate-policy mdp discount policy)))
-	       (lambda ()
+	       (lambda ()			            ; initial-guess
 		 (define policy (make-policy state => (choose (actions state)) for state in states))
 		 (cons policy (evaluate-policy mdp discount policy)))))

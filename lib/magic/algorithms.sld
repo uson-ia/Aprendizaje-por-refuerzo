@@ -10,8 +10,9 @@
    approximate
 
    ;; from algorithms/basic.scm
-   difference
+   difference range filter remove
    )
-  (import (scheme base))
+  (import (scheme base)
+	  (scheme case-lambda))
   (include "./algorithms/approximations.scm")
   (include "./algorithms/basic.scm"))

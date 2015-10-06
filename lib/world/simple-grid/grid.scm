@@ -27,14 +27,45 @@
     ((left)  'right)
     ((right) 'left)))
 
-(define-record-type <gridworld>
-  (make-gridworld width height grid valid-cell?)
-  gridworld?
-  (width       grid-width)
-  (height      grid-height)
-  (grid        grid                  set-grid!)
-  (valid-cell? gridworld-valid-cell?))
+(define gw:states
+  '((0 2) (1 2) (2 2) (3 2)
+    (0 1)       (2 1) (3 1)
+    (0 0) (1 0) (2 0) (3 0)))
 
-(define (gridworld->mdp gridworld)
-  (make-mdp
-   ))
+(define walls
+  '((1 1)))
+
+(define (go state action)
+  (define x (car state))
+  (define y (cadr state))
+  (let ((next (case action
+		((up)    (list x (+ y 1))) ((down)  (list x (- y 1)))
+		((left)  (list (- x 1) y)) ((right) (list (+ x 1) y)))))
+    (define x* (car next))
+    (define y* (cadr next))
+    (if (or (member next walls)
+	   (< x* 0) (> x* 3) (< y* 0) (> y* 2))
+	state
+	next)))
+
+(define gw:transitions
+  (mapping (s a s*)
+   ((s a (go s a))                0.8)
+   ((s a (go s (rotate-left a)))  0.1)
+   ((s a (go s (rotate-right a))) 0.1)
+   (else 0.0)))
+
+(define (gw:actions state)
+  '(up down left right))
+
+(define gw:rewards
+  (mapping (s a s*)
+	   ((s a '(3 1)) -1.0)
+	   ((s a '(3 2)) +1.0)
+	   (else         -0.04)))
+
+(define gridworld
+  (make-mdp gw:states
+	    gw:transitions
+	    gw:actions
+	    gw:rewards))
