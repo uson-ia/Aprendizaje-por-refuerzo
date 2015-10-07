@@ -6,17 +6,12 @@
 
 (define-library (world simple-grid)
   (export
-   rotate-left
-   rotate-right
-   opposite
-   gw:states
-   go
-   gw:transitions
-   gw:actions
-   gw:rewards
-   gridworld
+   make-simple-grid
+   grid
+   show-grid
    )
   (import (scheme base)
+	  (scheme write)
 	  (mdp)
 	  (magic algorithms)
 	  (magic comprehensions))

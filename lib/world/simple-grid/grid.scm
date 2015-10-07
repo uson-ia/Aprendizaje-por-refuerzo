@@ -27,15 +27,7 @@
     ((left)  'right)
     ((right) 'left)))
 
-(define gw:states
-  '((0 2) (1 2) (2 2) (3 2)
-    (0 1)       (2 1) (3 1)
-    (0 0) (1 0) (2 0) (3 0)))
-
-(define walls
-  '((1 1)))
-
-(define (go state action)
+(define (go state action states)
   (define x (car state))
   (define y (cadr state))
   (let ((next (case action
@@ -43,29 +35,82 @@
 		((left)  (list (- x 1) y)) ((right) (list (+ x 1) y)))))
     (define x* (car next))
     (define y* (cadr next))
-    (if (or (member next walls)
+    (if (or (not (member next states))
 	   (< x* 0) (> x* 3) (< y* 0) (> y* 2))
 	state
 	next)))
 
-(define gw:transitions
-  (mapping (s a s*)
-   ((s a (go s a))                0.8)
-   ((s a (go s (rotate-left a)))  0.1)
-   ((s a (go s (rotate-right a))) 0.1)
-   (else 0.0)))
+(define-record-type <grid>
+  (grid: width height cells cell-lst)
+  grid?
+  (width    grid-width)
+  (height   grid-height)
+  (cells    grid-cells)
+  (cell-lst grid-cell-lst))
 
-(define (gw:actions state)
-  '(up down left right))
+(define (grid width height . cell-lst)
+  (define (vectorize lst)
+    (if (null? lst)
+	#()
+	(vector-append (vectorize (list-tail lst width))
+		       (list->vector
+			(list-head lst width)))))
+  (grid: width height (vectorize cell-lst) cell-lst))
 
-(define gw:rewards
-  (mapping (s a s*)
-	   ((s a '(3 1)) -1.0)
-	   ((s a '(3 2)) +1.0)
-	   (else         -0.04)))
+(define (show-grid grd)
+  (define lst   (grid-cell-lst grd))
+  (define width (grid-width grd))
+  (let loop ((xs lst)
+	     (i 0))
+    (unless (null? xs)
+	    (when (zero? (remainder i width))
+		  (display "\n"))
+	    (display (car xs))
+	    (display " ")
+	    (loop (cdr xs) (+ i 1))))
+  (display "\n")
+  '~~~GRID~~~)
 
-(define gridworld
-  (make-mdp gw:states
-	    gw:transitions
-	    gw:actions
-	    gw:rewards))
+(define (grid-ref grd x y)
+  (vector-ref (grid-cells grd)
+	      (+ x (* y (grid-width grd)))))
+
+(define (coordinates width height)
+  (apply append (map (lambda (x) (map (lambda (y) (list x y)) (range height))) (range width))))
+
+(define (make-simple-grid grd)
+  (define coords (coordinates (grid-width grd)
+			      (grid-height grd)))
+  (define good
+    (car (filter (lambda (c)
+		   (case (grid-ref grd (car c) (cadr c))
+		     ((good) #t)
+		     (else #f)))
+		 coords)))
+  (define hell
+    (car (filter (lambda (c)
+		   (case (grid-ref grd (car c) (cadr c))
+		     ((hell) #t)
+		     (else #f)))
+		 coords)))
+  (define states
+    (filter (lambda (c)
+	      (case (grid-ref grd (car c) (cadr c))
+		((step good hell) #t)
+		(else #f)))
+	    coords))
+  (define transitions
+    (mapping (s a s*)
+	     ((s a (go s a states))                0.8)
+	     ((s a (go s (rotate-left a) states))  0.1)
+	     ((s a (go s (rotate-right a) states)) 0.1)
+	     (else 0.0)))
+  (define actions
+    (lambda (state)
+      '(up down left right)))
+  (define rewards
+    (mapping (s a s*)
+	     ((s a hell) -1.0)
+	     ((s a good) +1.0)
+	     (else       -0.04)))
+  (make-mdp states transitions actions rewards))

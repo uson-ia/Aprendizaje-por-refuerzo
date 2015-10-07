@@ -10,7 +10,7 @@
    approximate
 
    ;; from algorithms/basic.scm
-   difference range filter remove
+   difference range filter remove split list-head
    )
   (import (scheme base)
 	  (scheme case-lambda))

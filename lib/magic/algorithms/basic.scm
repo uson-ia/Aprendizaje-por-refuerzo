@@ -30,3 +30,18 @@
   (cond ((null? lst) '())
 	((pred (car lst)) (remove pred (cdr lst)))
 	(else (cons (car lst) (remove pred (cdr lst))))))
+
+(define (take lst n)
+  (cond ((zero? n) '())
+	((null? lst) '())
+	(else
+	 (cons (car lst) (take (cdr lst) (- n 1))))))
+
+(define (list-head lst n)
+  (if (zero? n)
+      '()
+      (cons (car lst) (list-head (cdr lst) (- n 1)))))
+
+(define (split lst n)
+  (values (list-head lst n)
+	  (list-tail lst n)))
