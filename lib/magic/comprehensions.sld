@@ -7,7 +7,7 @@
 (define-library (magic comprehensions)
   (export
    ;; from comprehensions/reducers.scm
-   sum val-max arg-max
+   sum val-max arg-max all-true?
    
    ;; from comprehensions/constructors.scm
    dict mapping alist-function)

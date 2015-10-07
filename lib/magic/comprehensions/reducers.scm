@@ -30,3 +30,13 @@
      (let ((as lst)
 	   (vs (map (lambda (var) code) lst)))
        (argmax (cdr as) (cdr vs) (car as) (car vs))))))
+
+(define (and-list lst)
+  (if (null? lst)
+      #true
+      (and (car lst) (and-list (cdr lst)))))
+
+(define-syntax all-true?
+  (syntax-rules (for in)
+    ((all-true? code for var in lst)
+     (and-list (map (lambda (var) code) lst)))))
