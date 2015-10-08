@@ -13,7 +13,7 @@ class MazeMDP():
     def __init__(self, maze_matrix):
         self.height = len(maze_matrix)
         self.width = len(maze_matrix[0])
-        
+
         self.set_states(maze_matrix)
         self.set_transitions(maze_matrix)
         self.set_actions(maze_matrix)
@@ -39,7 +39,7 @@ class MazeMDP():
         else:
             raise("not a valid action")
 
-        if maze_matrix[y2][x2] == 1 or x2 < 0 or y2 < 0 or x2 > self.width or y2 > self.height:
+        if (x2 < 0 or y2 < 0 or x2 > self.width or y2 > self.height-1 or x2 > self.width-1) or (maze_matrix[y2][x2] == 1):
             return state
         else:
             return (x2, y2)
@@ -92,4 +92,4 @@ class MazeMDP():
                 return -1.0
             else:
                 return -.04
-        self.rewards = rewards
+        self.r = rewards
