@@ -20,11 +20,11 @@ class MazeMDP():
         self.set_rewards(maze_matrix)
 
     def set_states(self, maze_matrix):
-        self.states = set()
+        self.estados = set()
         for i in range(self.height):
             for j in range(self.width):
                 if maze_matrix[i][j] != 1:
-                    self.states.add((j, i))
+                    self.estados.add((j, i))
 
     def go(self, maze_matrix, state, action):
         x, y = state
@@ -78,13 +78,13 @@ class MazeMDP():
                 return 0.1
             else:
                 return 0.0
-        self.transitions = transitions
+        self.p = transitions
 
     def set_actions(self, maze_matrix):
         self.actions = ('up', 'down', 'left', 'right')
 
     def set_rewards(self, maze_matrix):
-        def rewards(arriving_state):
+        def rewards(current_state, action, arriving_state):
             x, y = arriving_state
             if maze_matrix[y][x] == 2:
                 return 1.0
