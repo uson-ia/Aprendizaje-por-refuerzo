@@ -83,6 +83,9 @@ class MazeMDP():
     def set_actions(self, maze_matrix):
         self.actions = ('up', 'down', 'left', 'right')
 
+    def a_legales(self, state):
+        return ('up', 'right', 'left', 'down')
+
     def set_rewards(self, maze_matrix):
         def rewards(current_state, action, arriving_state):
             x, y = arriving_state
