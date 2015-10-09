@@ -3,4 +3,5 @@
 	(magic comprehensions)
 	(magic random)
 	(magic algorithms)
-	(world simple-grid))
+	(world simple-grid)
+        (world inventario))
