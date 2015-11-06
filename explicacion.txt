@@ -1,0 +1,3 @@
+El juego en general se compone de dos archivos el World.py y el Learner.py,
+para correr el juego se debe de correr el arhivo Learner.py,
+el cual aun no lo he documentado pero lo ire documentando con el tiempo
