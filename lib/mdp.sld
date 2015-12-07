@@ -17,12 +17,14 @@
 
    ;; from mdp/algorithms.scm
    value-iteration policy-iteration
+   q-learning
    )
   (import (scheme base)
 	  (magic macros)
 	  (magic comprehensions)
 	  (magic random)
-	  (magic algorithms))
+	  (magic algorithms)
+	  (magic table))
   (include "./mdp/record-type.scm")
   (include "./mdp/macros.scm")
   (include "./mdp/procedures.scm")

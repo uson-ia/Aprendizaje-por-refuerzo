@@ -13,3 +13,10 @@
   (transitions mdp-transitions)
   (actions     mdp-actions)
   (rewards     mdp-rewards))
+
+(define-record-type <mdp-sim>
+  (make-mdp-sim state? actions transition)
+  mdp-sim?
+  (state?      mdp-sim-state-pred)
+  (actions     mdp-sim-actions)
+  (transition  mdp-sim-transition))

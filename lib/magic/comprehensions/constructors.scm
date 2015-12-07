@@ -6,10 +6,30 @@
 ;;;
 ;;; For structure construction
 
+#;
 (define (alist-function alist)
   (lambda (key)
     (cond ((assoc key alist) => cdr)
 	  (else (error "value not in function's domain" key)))))
+
+(define (alist-function alist)
+  (lambda args
+    (case (length args)
+      ((0) alist)
+      ((1)
+       (let ((key (car args)))
+	 (cond ((assoc key alist) => cdr)
+	       (else #false))))
+      ((2)
+       (let ((key (car args))
+	     (val (cadr args)))
+	 (alist-function
+	  (let loop ((alist alist))
+	    (cond ((null? alist) (cons (cons key val) '()))
+		  ((equal? (caar alist) key)
+		   (cons (cons key val) (cdr alist)))
+		  (else (cons (car alist)
+			      (loop (cdr alist))))))))))))
 
 (define-syntax dict
   (syntax-rules (=> for in)
